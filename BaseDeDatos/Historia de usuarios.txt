@@ -1,0 +1,193 @@
+# A continuación se presentan las queries utilizadas para las historias de usuario en MongoDB.
+
+##Creación base de datos
+use modelo
+
+##Creación de colecciones
+db.createCollection('proyectos')
+db.createCollection('usuarios')
+
+##Poblar colección usuarios
+db.usuarios.insertMany([{correo: 'moagomezma@unal.edu.co', identificacion:1032488277,nombreCompleto:'Monica Alexandra Gomez Martinez', contrasena:'iCINtATIoNoi', rol:'Administrador', estado:'Autorizado'},
+{correo: 'a123@gmail.com', identificacion:23123987,nombreCompleto:'Maria Luisa Guzman', contrasena:'Maleja45553', rol:'Estudiante', estado:'No autorizado'},
+{correo: 'gumauroitubu-1519@gmail.com', identificacion:28012749,nombreCompleto:'Adam Manzanares', contrasena:'TIOUSibiliCo', rol:'Lider', estado:'No autorizado'},
+{correo: 'jaeio@gmail.com', identificacion:2343532397,nombreCompleto:'Javier Betancourt', contrasena:'password', rol:'Estudiante', estado:'Pendiente'},
+{correo:'saavedra@gmail.com', identificacion:122244561, nombreCompleto:'Alejandra Saavedra Gonzalez', contrasena:'thispassword', rol:'Lider', estado:'Pendiente'}])
+
+##Poblar colección proyectos
+
+db.proyectos.insert({nombreProyecto: 'Modelo de fraude', 
+		objetivosGenerales: 'Generar modelo estadistico de fraude orientado a bases de datos de salud',
+		objetivosEspecifijos: 'Plantear desde la metodología de Scrum un modelo estadistico para la detección de fraude en los datos de salud, teniendo en cuenta diferentes tipos de score y ranking',
+		presupuesto: 500000,
+		fechaInicio: new Date( "2021-11-01" ) ,
+		fechaFinal: new Date( "2021-12-01" ) ,
+		documentoLider: 122244561,
+		nombreLider: 'Alejandra Saavedra Gonzalez',
+		estadoProyecto:'Inactivo',
+		faseProyecto: 'Iniciado',
+		creacionProyecto: 'Pendiente',
+		miembros:[{_id : ObjectId(), identificacionEstudiante: 32395437, nombreEstudiante: "Juan Antonio Sandoval"}]
+}) 
+
+
+##HU_001: Registro en el sistema.
+
+db.usuarios.insert({correo: 'jitteixefolli-7308@gmail.com', identificacion:32395437,nombreCompleto:'Juan Antonio Sandoval', contrasena:'TrISiCRUskYl', rol:'Estudiante', estado:'No autorizado'})
+
+##HU_002: Ingreso de mi correo y contraseña para ser validados
+
+db.usuarios.find({correo:"moagomezma@unal.edu.co",contrasena:'iCINtATIoNoi'})
+
+##HU_003: Ingresar los datos que deseo actualizar
+
+db.usuarios.updateOne( { _id: ObjectId("61a02b5ba637ad3428046595") },
+{ $set: { contrasena: "admin"}, })
+
+db.usuarios.find({_id:ObjectId("61a02b5ba637ad3428046595")})
+
+##HU_004: Ver la información de los usuarios registrados en la plataforma
+
+db.usuarios.find()
+
+##HU_005: Podré cambiar el estado del usuario.
+
+db.usuarios.updateOne(
+{_id:ObjectId("61a02b5ba637ad3428046596")},
+{$set:{estado:"Autorizado"}
+})
+
+db.usuarios.find({_id:ObjectId("61a02b5ba637ad3428046596")})
+
+##HU_006: Ver la lista de los proyectos registrados en la plataforma
+
+db.proyectos.find()
+
+##HU_007: Aprobar la creación de un proyecto
+
+db.proyectos.updateOne({_id:ObjectId("61a02c9ca637ad342804659b")},{$set:{creacionProyecto:"Aprobado",estadoProyecto:"Activo"}})
+
+db.proyectos.find({_id:ObjectId("61a02c9ca637ad342804659b")})
+
+##HU_008: Actualizar el estado del proyecto.
+
+db.proyectos.updateOne({_id:ObjectId("61a02c9ca637ad342804659b")},{$set:{estadoProyecto:"Inactivo"}})
+db.proyectos.find({_id:ObjectId("61a02c9ca637ad342804659b")})
+
+##HU_009: Podré actualizar la fase del proyecto.
+
+db.proyectos.updateOne( { _id: ObjectId("61a02c9ca637ad342804659b"),faseProyecto: "Iniciado"},
+{ $set: { faseProyecto: "En desarrollo"},} )
+
+db.proyectos.updateOne( { _id: ObjectId("61a02c9ca637ad342804659b"),faseProyecto: "En desarrollo"},
+{ $set: { faseProyecto: "Terminado"},} )
+
+##HU_010: Podré ver la información de los estudiantes registrados en la plataforma
+
+db.usuarios.find({rol:"Estudiante"})
+
+##HU_011: Podré cambiar el estado del estudiante de “Pendiente” a “Autorizado”
+
+db.usuarios.updateOne( { _id: ObjectId("61a02b5ba637ad3428046598"),estado: "Pendiente"},
+{ $set: { estado:"Autorizado"},} )
+
+db.usuarios.find({_id:ObjectId("61a02b5ba637ad3428046598")})
+
+##HU_012: Podré crear un nuevo proyecto
+
+db.proyectos.insert({nombreProyecto: 'Clasificación de textos mediante NLP', 
+		objetivosGenerales: 'Generar el código en python para la clasificación de diversos textos publicados en ciertas agrupaciones',
+		objetivosEspecifijos: 'Clasificaciones de un banco de documentos en diversos formatos digitales utilizando NLP junto con el programa de NLP para agrupar la información de interés.',
+		presupuesto: 100000,
+		fechaInicio: new Date( "2021-11-01" ) ,
+		fechaFinal: new Date( "2021-12-01" ) ,
+		documentoLider: 28012749,
+		nombreLider: 'Adam Manzanares',
+		estadoProyecto:'Inactivo',
+		faseProyecto: 'Iniciado',
+		creacionProyecto: 'Pendiente',
+		miembros:[{_id : ObjectId(),identificacion: 23123987, nombreCompleto: "Maria Luisa Guzman"}],
+		avances:[{_id : ObjectId(),identificacionEstudiante:23123987, nombreEstudiante: "Maria Luisa Guzman", observacion: "Se genera el primer avance del proyecto", revisado:'Completo', tarea:1}],
+		solicitud: [{_id : ObjectId(),identificacion:32395437,nombreCompleto: "Juan Antonio Sandoval", estado: 'Pendiente'}]
+}) 
+
+
+##HU_013: Sólo podré listar los proyectos que tengo a cargo
+
+db.proyectos.find({documentoLider:28012749})
+
+##HU_014: podré editar la información relacionada al proyecto cuya información 
+##necesito actualizar (Solamente puede actualizar: Nombre del proyecto, los 
+##objetivos generales, específicos y el presupuesto)
+
+db.proyectos.updateOne({_id:ObjectId("61a0325ba637ad34280465a0")},{$set:{nombreProyecto:"Proyecto de regulación de la información"}})
+
+##HU_015: podré listar las solicitudes realizadas por los estudiantes.
+
+db.proyectos.find({_id:ObjectId("61a0325ba637ad34280465a0")}, {solicitud:1})
+
+##HU_016: podré aceptar o rechazar sus inscripciones
+
+db.proyectos.update({
+	_id:ObjectId("61a0325ba637ad34280465a0"),
+	solicitud:{
+		$elemMatch:{identificacion:32395437}
+}
+},{$set: {
+	"solicitud.$.estado":"Aceptado"
+	}
+})
+
+
+##HU_017:  podré listar la información relacionada al proyecto que deseo revisar (Incluyendo los avances).
+
+db.proyectos.find({documentoLider:28012749, _id: ObjectId("61a0325ba637ad34280465a0")})
+
+##HU_018: podré actualizar el campo de observaciones del avance seleccionado.
+
+db.proyectos.updateOne( { _id: ObjectId("61a0325ba637ad34280465a0")},
+{ $set: { observaciones: "Aqui se colocan las observaciones"},} )
+
+db.proyectos.find({_id: ObjectId("61a0325ba637ad34280465a0")})
+
+##HU_019: podré ver la lista de los proyectos registrados en la plataforma
+
+db.proyectos.find()
+
+##HU_020: podré generar una solicitud de inscripción al proyecto
+
+db.proyectos.updateOne({_id: ObjectId("61a0325ba637ad34280465a0")},
+	{
+		$push:{ "solicitud":{_id : ObjectId(), identificacion:2343532397,nombreCompleto:"Javier Betancourt",estado:"Pendiente"}
+	}
+}
+)
+
+## HU_021: podré ver la lista de los avances del proyecto registrados
+
+db.proyectos.find({_id:ObjectId("61a0325ba637ad34280465a0")},{avances:1})
+
+##HU_022: podré ingresar la descripción de mi avance en el proyecto
+
+db.proyectos.updateOne({_id:ObjectId("61a0325ba637ad34280465a0")},
+	{
+		$push:{ "avances":{_id : ObjectId(),identificacion:23123987,nombreCompleto:"Maria Luisa Guzman",observacion:"Se genera la primera tarea a revisar",revisado:"Pendiente",tarea:2}
+	}
+}
+)
+
+##HU_023: podré modificar la descripción del avance
+
+db.proyectos.update({
+	_id:ObjectId("61a0325ba637ad34280465a0"),
+	avances:{
+		$elemMatch:{identificacion:23123987,tarea:2}
+}
+},{$set: {
+	"avances.$.revisado":"Completo"
+	}
+})
+
+
+
+
